@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Table, Image, Tag } from "antd";
+import { Table, Image, Tag, Button } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const ProductDetails = () => {
   const [products, setProducts] = useState([]);
-
+  const [compareList, setCompareList] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     fetch("https://dummyjson.com/products")
       .then((res) => res.json())
@@ -13,6 +15,15 @@ const ProductDetails = () => {
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
   const colors = ["red", "orange", "green", "blue"];
+
+  const isProductAlreadyInCompareList = (productId) => {
+    return compareList.some((p) => p.id === productId);
+  };
+
+  const goToComparePage = () => {
+    navigate("/compare-products", { state: { compareList } });
+  };
+
   const columns = [
     {
       title: "Thumbnail",
@@ -60,9 +71,38 @@ const ProductDetails = () => {
           </Tag>
         );
       },
-      sorter: (a, b) => a.category.localeCompare(b.category)
+      sorter: (a, b) => a.category.localeCompare(b.category),
+    },
+    {
+      title: "Compare",
+      key: "compare",
+      render: (text, product) => (
+        <Button
+          onClick={() =>
+            handleCompare(
+              product,
+              isProductAlreadyInCompareList(product?.id) ? "remove" : "compare"
+            )
+          }
+          type="primary"
+          danger={isProductAlreadyInCompareList(product?.id)}
+        >
+          {isProductAlreadyInCompareList(product?.id) ? "Remove" : "Compare"}
+        </Button>
+      ),
     },
   ];
+
+  const handleCompare = (product, btnType) => {
+    if (btnType === "compare") {
+      if (compareList.length < 4) {
+        setCompareList([...compareList, product]);
+      }
+    } else {
+      const updatedList = compareList.filter((e) => e.id !== product.id);
+      setCompareList([...updatedList]);
+    }
+  };
 
   return (
     <div className="p-4">
@@ -74,6 +114,12 @@ const ProductDetails = () => {
         bordered
         pagination={{ pageSize: 6 }}
       />
+
+      {compareList.length > 0 && (
+        <Button className="mt-4" type="primary" onClick={goToComparePage}>
+          Compare {compareList.length} product(s)
+        </Button>
+      )}
     </div>
   );
 };
