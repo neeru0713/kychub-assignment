@@ -77,11 +77,13 @@ const CompareProducts = () => {
       dataIndex: "attribute",
       key: "attribute",
       fixed: "left",
+      width: "20%"
     },
     ...compareList.map((product) => ({
       title: product.title,
       dataIndex: product.title,
       key: product.id,
+      width: `${80 / compareList?.length}%`
     })),
   ];
 
