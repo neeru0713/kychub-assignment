@@ -10,6 +10,25 @@ const CompareProducts = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [allProducts, setAllProducts] = useState([]);
 
+  const getHighlightedAttributes = () => {
+    const attributes = ["brand", "price", "discountPercentage", "category"];
+    const differences = {};
+  
+    attributes.forEach((attr) => {
+      const values = compareList.map((p) => p[attr]);
+      const uniqueValues = new Set(values);
+  
+      if (uniqueValues.size > 1) {
+        differences[attr] = true;
+      }
+    });
+  
+    return differences;
+  };
+  
+  const highlightedAttributes = getHighlightedAttributes();
+  
+
   const removeProduct = (id) => {
     const updatedList = compareList.filter((product) => product.id !== id);
     setCompareList(updatedList);
@@ -41,11 +60,16 @@ const CompareProducts = () => {
 
   const transposedData = attributesToCompare.map((attr) => {
     const rowData = { attribute: attr.label };
-
+  
     compareList.forEach((product) => {
+      const isHighlighted = highlightedAttributes[attr.key];
+  
       if (attr.key === "category") {
         rowData[product.title] = (
-          <Tag color={getColorForCategory(product.category)}>
+          <Tag
+            color={getColorForCategory(product.category)}
+            className={isHighlighted ? "bg-yellow-200 font-bold" : ""}
+          >
             {product.category}
           </Tag>
         );
@@ -55,6 +79,7 @@ const CompareProducts = () => {
             src={product.thumbnail}
             alt={product.title}
             width={80}
+            className={isHighlighted ? "border-2 border-yellow-400" : ""}
           />
         );
       } else if (attr.key === "remove") {
@@ -64,10 +89,14 @@ const CompareProducts = () => {
           </Button>
         );
       } else {
-        rowData[product.title] = product[attr.key];
+        rowData[product.title] = (
+          <span className={isHighlighted ? "bg-yellow-200 font-bold p-1" : ""}>
+            {product[attr.key]}
+          </span>
+        );
       }
     });
-
+  
     return rowData;
   });
 
