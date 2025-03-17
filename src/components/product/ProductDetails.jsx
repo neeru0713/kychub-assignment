@@ -35,11 +35,13 @@ const ProductDetails = () => {
       title: "Price ($)",
       dataIndex: "price",
       key: "price",
+      sorter: (a, b) => a.price - b.price,
     },
     {
       title: "Discount (%)",
       dataIndex: "discountPercentage",
       key: "discountPercentage",
+      sorter: (a, b) => a.discountPercentage - b.discountPercentage,
     },
     {
       title: "Brand",
@@ -58,6 +60,7 @@ const ProductDetails = () => {
           </Tag>
         );
       },
+      sorter: (a, b) => a.category.localeCompare(b.category)
     },
   ];
 
