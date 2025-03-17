@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, Image, Tag, Button } from "antd";
 import { useNavigate } from "react-router-dom";
-
+import { isProductAlreadyInCompareList, getColorForCategory } from "../../utils/utils";
 const ProductDetails = () => {
   const [products, setProducts] = useState([]);
   const [compareList, setCompareList] = useState([]);
@@ -14,11 +14,6 @@ const ProductDetails = () => {
       })
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
-  const colors = ["red", "orange", "green", "blue"];
-
-  const isProductAlreadyInCompareList = (productId) => {
-    return compareList.some((p) => p.id === productId);
-  };
 
   const goToComparePage = () => {
     navigate("/compare-products", { state: { compareList } });
@@ -64,9 +59,8 @@ const ProductDetails = () => {
       dataIndex: "category",
       key: "category",
       render: (ctg) => {
-        const color = colors[ctg.length % colors.length];
         return (
-          <Tag color={color} key={ctg}>
+          <Tag color={getColorForCategory(ctg)} key={ctg}>
             {ctg}
           </Tag>
         );
@@ -81,13 +75,13 @@ const ProductDetails = () => {
           onClick={() =>
             handleCompare(
               product,
-              isProductAlreadyInCompareList(product?.id) ? "remove" : "compare"
+              isProductAlreadyInCompareList(product?.id, compareList) ? "remove" : "compare"
             )
           }
           type="primary"
-          danger={isProductAlreadyInCompareList(product?.id)}
+          danger={isProductAlreadyInCompareList(product?.id, compareList)}
         >
-          {isProductAlreadyInCompareList(product?.id) ? "Remove" : "Compare"}
+          {isProductAlreadyInCompareList(product?.id, compareList) ? "Remove" : "Compare"}
         </Button>
       ),
     },
