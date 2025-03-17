@@ -5,6 +5,8 @@ import ProductDetails from "./components/product/ProductDetails";
 import CompareProducts from "./components/product/CompareProducts";
 import  Navbar  from "./components/nav/Navbar";
 import  Sidebar from "./components/nav/Sidebar";
+import About from "./components/about/About";
+import Contact from "./components/contact/Contact";
 function App() {
 
   return (
@@ -17,6 +19,8 @@ function App() {
             <Routes>
               <Route path="/" element={<ProductDetails />} />
               <Route path="/compare-products" element={<CompareProducts />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
             </Routes>
           </div>
         </div>
