@@ -12,8 +12,7 @@ const ProductDetails = () => {
       })
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
-
-
+  const colors = ["red", "orange", "green", "blue"];
   const columns = [
     {
       title: "Thumbnail",
@@ -51,10 +50,14 @@ const ProductDetails = () => {
       title: "Category",
       dataIndex: "category",
       key: "category",
-      render: (ctg) =>  <Tag color="blue" key={ctg}>
-      {ctg}
-    </Tag>
-       
+      render: (ctg) => {
+        const color = colors[ctg.length % colors.length];
+        return (
+          <Tag color={color} key={ctg}>
+            {ctg}
+          </Tag>
+        );
+      },
     },
   ];
 
