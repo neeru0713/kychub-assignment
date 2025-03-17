@@ -1,7 +1,9 @@
 import React from 'react'
 
-export const CompareProducts = () => {
+const CompareProducts = () => {
   return (
     <div>CompareProducts</div>
   )
 }
+
+export default CompareProducts
